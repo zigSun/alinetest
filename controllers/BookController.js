@@ -26,25 +26,9 @@ class BookController {
     if(!book) {
       ctx.throw(404, 'Book not found');
     }
-    const updateData = {}
+    
 
-    if(typeof title !== 'undefined') {
-      updateData.title = title;
-    }
-    if(typeof description !== 'undefined') {
-      updateData.description = description;
-    }
-    if(typeof image !== 'undefined') {
-      updateData.image = image;
-    }
-    if(typeof author !== 'undefined') {
-      updateData.author = author;
-    }
-    if(typeof date !== 'undefined') {
-      updateData.date = new Date(date);
-    }
-
-    await BookModel.edit(id, updateData)
+    await BookModel.edit(id, {title, description, image, author, date})
 
     ctx.body = {};
   }
