@@ -5,9 +5,11 @@
   "author": "Vlad Lisitsin <zzigsun@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "db:prepare" : "node ./utils/dbinit.js && node ./seeders/BookSeeder.js"
   },
   "dependencies": {
+    "ajv-request-validator": "^0.2.0",
     "bluebird": "^3.7.2",
     "dotenv": "^8.2.0",
     "koa": "^2.11.0",

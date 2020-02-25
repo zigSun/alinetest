@@ -1,17 +1,21 @@
-require('dotenv').config();
-const mysql = require('mysql2/promise');
-const bluebird = require('bluebird');
+require("dotenv").config();
+const mysql = require("mysql2/promise");
+const bluebird = require("bluebird");
 
-const connection = mysql.createConnection({
-  host : process.env.DB_HOST || 'localhost',
-  user : process.env.DB_USER,
-  password: process.env.DB_PASS,
-  database: process.env.DB_NAME,
-  Promise : bluebird
-});
+let connection;
 
-connection.connect(function(err) {
-  if (err) throw err;
-});
-
-module.exports = connection;
+module.exports = (async () => {
+  if(connection)  {
+    return connection;
+  }
+  let db = await mysql.createConnection({
+    host: process.env.DB_HOST || "localhost",
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.DB_NAME,
+    Promise: bluebird
+  });
+  
+  connection = db;
+  return connection;
+})();
