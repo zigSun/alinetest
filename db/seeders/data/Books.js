@@ -7,7 +7,7 @@ function randomDate(start, end) {
 
 const bookRecords = [];
 
-for (let i = 0; i < 1e2; i++) {
+for (let i = 0; i < 1e5; i++) {
   bookRecords.push({
     title: `book_title_${i}`,
     description: `random description for book_title_${i}`,
