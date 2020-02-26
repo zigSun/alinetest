@@ -26,7 +26,7 @@ const getListQuerySchema = Joi.object({
   date : Joi.date(),
   limit : Joi.number().integer().min(0).default(20),
   offset: Joi.number().integer().min(0).default(0),
-  order : Joi.string()
+  order : Joi.string().default('id:asc')
 })
 
 const idParamsSchema = Joi.object({
