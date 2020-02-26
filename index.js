@@ -1,7 +1,7 @@
 require("dotenv").config();
 const koa = require("koa");
 const bodyParser = require("koa-body");
-const router = require('./router');
+const router = require('./app/router');
 
 const app = new koa();
 
@@ -14,6 +14,7 @@ app.use(async (ctx, next) => {
   try {
     await next();
   } catch (err) {
+    console.error(err);
     ctx.status = err.statusCode || err.status || 500;
     ctx.body = {
       error: err.message

@@ -7,13 +7,13 @@ function randomDate(start, end) {
 
 const bookRecords = [];
 
-for (let i = 0; i < 1e5; i++) {
+for (let i = 0; i < 1e2; i++) {
   bookRecords.push({
     title: `book_title_${i}`,
     description: `random description for book_title_${i}`,
     image: `/books/images/book_${i}.png`,
     date: randomDate(new Date(1000, 0, 1), new Date()).toISOString().slice(0, 19).replace('T', ' '),
-    author: `random_author_${i}`
+    author: `author_${i}`
   });
 }
 

@@ -1,21 +1,15 @@
 const db = require("../db");
+const NodeCache = require( "node-cache" );
+const CACHE = new NodeCache();
 
 class BookModel {
-  constructor({ title, description, author, image, date }) {
-    this.title = title;
-    this.description = description;
-    this.image = image;
-    this.date = date;
-    this.author = author;
-  }
-
   static async create({ title, description, image, author, date }) {
     const connection = await db;
 
     const createQuery =
       "INSERT `books`(title, description, image, author, date) VALUES(?, ?, ?, ?, ?)";
 
-    const [rows] = await connection.query(createQuery, [
+    const [result] = await connection.query(createQuery, [
       title,
       description,
       image,
@@ -26,10 +20,12 @@ class BookModel {
         .replace("T", " ")
     ]);
 
-    return [rows];
+    CACHE.flushAll();
+
+    return result.insertId;
   }
 
-  static async list(filter = {}) {
+  static async findAll(filter = {}) {
     const connection = await db;
 
     const buildFilter = filter => {
@@ -102,13 +98,18 @@ class BookModel {
 
     const listQuery =
       "SELECT * FROM `books` " +
-      "WHERE " + filterParts.where +
+      "WHERE " +
       filterParts.where +
       (filterParts.order ? " ORDER BY " + filterParts.order : "") +
       (filterParts.limit ? " LIMIT " + filterParts.limit : "") +
       (filterParts.offset && filterParts.limit
         ? " OFFSET " + filterParts.offset
         : "");
+    
+    const sql = connection.format(listQuery, filterParts.values);
+    if(CACHE.has(sql)) {
+      return JSON.parse(CACHE.get(sql));
+    }
 
     const [list] = await connection.query(listQuery, filterParts.values);
 
@@ -118,6 +119,12 @@ class BookModel {
       filterParts.where;
 
     const [count] = await connection.query(countListQuery, filterParts.values);
+
+    CACHE.set(sql, JSON.stringify({
+      list: list,
+      total: count[0].where_total
+      })
+    );
 
     return {
       list: list,
@@ -176,8 +183,10 @@ class BookModel {
       SET ${updateParts.join(",")}
       WHERE \`id\` = ${id} 
     `;
-
+    
     await connection.query(updateQuery, values);
+    
+    CACHE.flushAll();
   }
 }
 
