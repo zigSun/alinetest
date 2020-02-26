@@ -21,7 +21,7 @@ class BookController {
   }
 
   static async editBook(ctx) {
-    const { id } = ctx.params;
+    const { id } = ctx.PARAMS;
 
     const book = await BookModel.getById(id);
     
