@@ -9,7 +9,7 @@
     "db:prepare": "node ./db/utils/dbinit.js && node ./db/seeders/BookSeeder.js"
   },
   "dependencies": {
-    "ajv": "^6.12.0",
+    "ajv": "^6.12.3",
     "bluebird": "^3.7.2",
     "dotenv": "^8.2.0",
     "joi": "^14.3.1",
